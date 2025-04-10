@@ -1,17 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Pencil, Trash2, Plus } from 'lucide-react';
-import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../store/slices/productsSlice';
-import type { RootState, AppDispatch } from '../store/store';
-import type { ProductFormData } from '../schemas/product';
-import ProductModal from './modals/ProductModal';
-import Header from './Header';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Pencil, Trash2, Plus } from "lucide-react";
+import {
+  fetchProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "../store/slices/productsSlice";
+import type { RootState, AppDispatch } from "../store/store";
+import type { ProductFormData } from "../schemas/product";
+import ProductModal from "./modals/ProductModal";
+import Header from "./Header";
 
 const ProductManagement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { products, loading, error } = useSelector((state: RootState) => state.products);
+  const { products, loading, error } = useSelector(
+    (state: RootState) => state.products
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<{ id: string; data: ProductFormData } | null>(null);
+  const [editingProduct, setEditingProduct] = useState<{
+    id: string;
+    data: ProductFormData;
+  } | null>(null);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -24,31 +34,32 @@ const ProductManagement: React.FC = () => {
 
   const handleUpdateProduct = async (data: ProductFormData) => {
     if (editingProduct) {
-      await dispatch(updateProduct({ id: editingProduct.id, productData: data }));
+      await dispatch(
+        updateProduct({ id: editingProduct.id, productData: data })
+      );
       setEditingProduct(null);
     }
   };
 
   const handleDeleteProduct = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
+    if (window.confirm("Are you sure you want to delete this product?")) {
       await dispatch(deleteProduct(id));
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div
+        className="flex items-center justify-center min-h-screen"
+        role="status"
+      >
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
 
   if (error) {
-    return (
-      <div className="text-center text-red-600 p-4">
-        Error: {error}
-      </div>
-    );
+    return <div className="text-center text-red-600 p-4">Error: {error}</div>;
   }
 
   return (
@@ -79,19 +90,34 @@ const ProductManagement: React.FC = () => {
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
                         Name
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Description
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Price
                       </th>
-                      <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Created At
                       </th>
-                      <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                      <th
+                        scope="col"
+                        className="relative py-3.5 pl-3 pr-4 sm:pr-6"
+                      >
                         <span className="sr-only">Actions</span>
                       </th>
                     </tr>
@@ -113,7 +139,12 @@ const ProductManagement: React.FC = () => {
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <button
-                            onClick={() => setEditingProduct({ id: product.id, data: product })}
+                            onClick={() =>
+                              setEditingProduct({
+                                id: product.id,
+                                data: product,
+                              })
+                            }
                             className="text-indigo-600 hover:text-indigo-900 mr-4"
                           >
                             <Pencil className="h-4 w-4" />
